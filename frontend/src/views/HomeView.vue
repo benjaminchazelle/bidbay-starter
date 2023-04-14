@@ -1,16 +1,19 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref } from "vue";
 
 const loading = ref(false);
 const error = ref(false);
+const products = ref([]);
 
 async function fetchProducts() {
   loading.value = true;
   error.value = false;
-
   try {
+    const response = await fetch("http://localhost:3000/api/products");
+    products.value = await response.json();
   } catch (e) {
     error.value = true;
+    console.log(e);
   } finally {
     loading.value = false;
   }
@@ -72,11 +75,18 @@ fetchProducts();
       Une erreur est survenue lors du chargement des produits.
     </div>
     <div class="row">
-      <div class="col-md-4 mb-4" v-for="i in 10" data-test-product :key="i">
+      <div
+        class="col-md-4 mb-4"
+        v-for="product in products"
+        data-test-product
+        :key="product.id"
+      >
         <div class="card">
-          <RouterLink :to="{ name: 'Product', params: { productId: 'TODO' } }">
+          <RouterLink
+            :to="{ name: 'Product', params: { productId: product.id } }"
+          >
             <img
-              src="https://picsum.photos/id/403/512/512"
+              :src="product.pictureUrl"
               data-test-product-picture
               class="card-img-top"
             />
@@ -85,27 +95,27 @@ fetchProducts();
             <h5 class="card-title">
               <RouterLink
                 data-test-product-name
-                :to="{ name: 'Product', params: { productId: 'TODO' } }"
+                :to="{ name: 'Product', params: { productId: product.id } }"
               >
-                Machine à écrire
+                {{ product.name }}
               </RouterLink>
             </h5>
             <p class="card-text" data-test-product-description>
-              Machine à écrire vintage en parfait état de fonctionnement
+                {{ product.description }}
             </p>
             <p class="card-text">
               Vendeur :
               <RouterLink
                 data-test-product-seller
-                :to="{ name: 'User', params: { userId: 'TODO' } }"
+                :to="{ name: 'User', params: { userId: product.sellerId } }"
               >
-                alice
+                  {{ product.seller.username }}
               </RouterLink>
             </p>
             <p class="card-text" data-test-product-date>
-              En cours jusqu'au 05/04/2026
+              En cours jusqu'au {{product.endDate}}
             </p>
-            <p class="card-text" data-test-product-price>Prix actuel : 42 €</p>
+            <p class="card-text" data-test-product-price>Prix actuel : {{product.originalPrice }} €</p>
           </div>
         </div>
       </div>
