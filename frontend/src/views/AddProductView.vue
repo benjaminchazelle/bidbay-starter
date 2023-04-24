@@ -1,7 +1,12 @@
 <script setup>
+
+// Rediriger sur la page de login si non connecté >
+// Permettre de remplir le nom, description, photo, prix de départ, date de début et fin >
+// Enregistrer via POST /api/products/ > Gérer message d'erreur >
+// Rediriger sur la page du produit après ajout
+
 import { useAuthStore } from "../store/auth";
 import { useRouter } from "vue-router";
-import { ref } from "vue";
 
 const { isAuthenticated, token } = useAuthStore();
 const router = useRouter();
@@ -10,7 +15,8 @@ if (!isAuthenticated.value) {
   router.push({ name: "Login" });
 }
 
-// router.push({ name: "Product", params: { productId: 'TODO } });
+//router.push({ name: "Product", params: { productId: 'TODO' } });
+
 </script>
 
 <template>
@@ -19,9 +25,6 @@ if (!isAuthenticated.value) {
   <div class="row justify-content-center">
     <div class="col-md-6">
       <form>
-        <div class="alert alert-danger mt-4" role="alert" data-test-error>
-          Une erreur s'est produite
-        </div>
 
         <div class="mb-3">
           <label for="product-name" class="form-label"> Nom du produit </label>
@@ -114,12 +117,6 @@ if (!isAuthenticated.value) {
             data-test-submit
           >
             Ajouter le produit
-            <span
-              data-test-spinner
-              class="spinner-border spinner-border-sm"
-              role="status"
-              aria-hidden="true"
-            ></span>
           </button>
         </div>
       </form>

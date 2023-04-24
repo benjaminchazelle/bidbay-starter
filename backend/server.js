@@ -1,5 +1,5 @@
 import express from 'express'
-import { initializeDatabase } from './orm/index.js'
+import { initializeDatabase, Product } from './orm/index.js'
 import { regenerateFixtures } from './orm/fixtures/index.js'
 import devRoutes from './routes/dev.js'
 import authRoutes from './routes/auth.js'
